@@ -228,7 +228,8 @@ ACTION delphioracle::configure(globalinput g) {
 
   }
 
-  if (pitr == pairs.end()){
+  // Add default pair if not on WAX
+  if (pitr == pairs.end() && SYSTEM_SYMBOL != "WAX"){
 
       pairs.emplace(_self, [&](auto& o) {
         o.active = true;
