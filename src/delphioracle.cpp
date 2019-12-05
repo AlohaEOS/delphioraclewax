@@ -26,10 +26,15 @@ ACTION delphioracle::write(const name owner, const std::vector<quote>& quotes) {
 
   check(length>0, "must supply non-empty array of quotes");
   check(check_oracle(owner), "account is not a qualified oracle");
-
-  statstable stable(_self, _self.value);
+  
+  // Check that they aren't pushing any pair too often
+  // This also updates the global stats 
   pairstable pairs(_self, _self.value);
-
+  for (int i=0; i<length;i++){
+    check_last_push(owner, quotes[i].pair);
+  }
+  
+  statstable stable(_self, _self.value);
   auto oitr = stable.find(owner.value);
 
   for (int i=0; i<length;i++){
@@ -38,8 +43,6 @@ ACTION delphioracle::write(const name owner, const std::vector<quote>& quotes) {
     auto itr = pairs.find(quotes[i].pair.value);
 
     check(itr!=pairs.end() && itr->active == true, "pair not allowed");
-
-    check_last_push(owner, quotes[i].pair);
 
     if (itr->bounty_amount>=one_larimer && oitr != stable.end()){
 
