@@ -22,7 +22,7 @@ ACTION delphioracle::write(const name owner, const std::vector<quote>& quotes) {
   
   int length = quotes.size();
 
-  print("length ", length);
+  //print("length ", length);
 
   check(length>0, "must supply non-empty array of quotes");
   check(check_oracle(owner), "account is not a qualified oracle");
@@ -38,7 +38,7 @@ ACTION delphioracle::write(const name owner, const std::vector<quote>& quotes) {
   auto oitr = stable.find(owner.value);
 
   for (int i=0; i<length;i++){
-    print("quote ", i, " ", quotes[i].value, " ",  quotes[i].pair, "\n");
+    //print("quote ", i, " ", quotes[i].value, " ",  quotes[i].pair, "\n");
     
     auto itr = pairs.find(quotes[i].pair.value);
 

@@ -641,7 +641,7 @@ private:
 
   void update_votes(){
 
-    print("voting for bps:", "\n");
+    //print("voting for bps:", "\n");
 
     std::vector<eosio::name> bps;
 
@@ -653,7 +653,7 @@ private:
     uint64_t count = 0;
 
     while(itr != sorted_idx.end() && count<30){
-      print(itr->owner, "\n");
+      //print(itr->owner, "\n");
       bps.push_back(itr->owner);
 
       itr++;
@@ -747,7 +747,7 @@ private:
 
     auto gitr =  gtable.begin();
 
-    print("gtable.begin()->total_datapoints_count:", gitr->total_datapoints_count,  "\n");
+    //print("gtable.begin()->total_datapoints_count:", gitr->total_datapoints_count,  "\n");
 
     if (gtable.begin()->total_datapoints_count % gitr->vote_interval == 0){
       update_votes();
