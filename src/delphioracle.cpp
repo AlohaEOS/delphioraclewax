@@ -29,11 +29,11 @@ ACTION delphioracle::write(const name owner, const std::vector<quote>& quotes) {
   
   // Check that they aren't pushing any pair too often
   // This also updates the global stats 
-  pairstable pairs(_self, _self.value);
   for (int i=0; i<length;i++){
     check_last_push(owner, quotes[i].pair);
   }
   
+  pairstable pairs(_self, _self.value);
   statstable stable(_self, _self.value);
   auto oitr = stable.find(owner.value);
 
