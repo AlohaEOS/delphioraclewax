@@ -239,7 +239,7 @@ ACTION delphioracle::configure(globalinput g) {
         o.bounty_awarded = true;
         o.bounty_edited_by_custodians = true;
         o.proposer = _self;
-        o.name = SYSTEM_PAIR_NAME;
+        o.name = name(SYSTEM_SYMBOL);
         o.bounty_amount = asset(0, symbol(SYSTEM_SYMBOL, SYSTEM_PRECISION));
         o.base_symbol =  symbol(SYSTEM_SYMBOL, SYSTEM_PRECISION);
         o.base_type = e_asset_type::eosio_token;
@@ -250,7 +250,7 @@ ACTION delphioracle::configure(globalinput g) {
         o.quoted_precision = SYSTEM_PRECISION;
       });
 
-      datapointstable dstore(_self, name(SYSTEM_PAIR_NAME).value);
+      datapointstable dstore(_self, name(SYSTEM_SYMBOL).value);
 
       //First data point starts at uint64 max
       uint64_t primary_key = 0;
