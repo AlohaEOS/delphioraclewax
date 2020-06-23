@@ -25,7 +25,8 @@ ACTION delphioracle::write(const name owner, const std::vector<quote>& quotes) {
   print("length ", length);
 
   check(length>0, "must supply non-empty array of quotes");
-  check(check_oracle(owner), "account is not a qualified oracle");
+  check(check_bp(owner), "account is not a bp");
+  bool is_oracle = check_oracle(owner);
 
   statstable stable(_self, _self.value);
   pairstable pairs(_self, _self.value);
@@ -39,32 +40,34 @@ ACTION delphioracle::write(const name owner, const std::vector<quote>& quotes) {
 
     check(itr!=pairs.end() && itr->active == true, "pair not allowed");
 
-    check_last_push(owner, quotes[i].pair);
+    // Only write if we are in an oracle position 
+    if (is_oracle) {
+      check_last_push(owner, quotes[i].pair);
 
-    if (itr->bounty_amount>=one_larimer && oitr != stable.end()){
+      if (itr->bounty_amount>=one_larimer && oitr != stable.end()){
 
-      //global donation to the contract, split between top oracles across all pairs
-      stable.modify(*oitr, _self, [&]( auto& s ) {
-        s.balance += one_larimer;
-      });
+        //global donation to the contract, split between top oracles across all pairs
+        stable.modify(*oitr, _self, [&]( auto& s ) {
+          s.balance += one_larimer;
+        });
 
-      //global donation to the contract, split between top oracles across all pairs
-      pairs.modify(*itr, _self, [&]( auto& s ) {
-        s.bounty_amount -= one_larimer;
-      });
+        //global donation to the contract, split between top oracles across all pairs
+        pairs.modify(*itr, _self, [&]( auto& s ) {
+          s.bounty_amount -= one_larimer;
+        });
 
+      }
+      else if (itr->bounty_awarded==false && itr->bounty_amount<one_larimer){
+
+        //global donation to the contract, split between top oracles across all pairs
+        pairs.modify(*itr, _self, [&]( auto& s ) {
+          s.bounty_awarded = true;
+        });
+
+      }
+
+      update_datapoints(owner, quotes[i].value, itr);
     }
-    else if (itr->bounty_awarded==false && itr->bounty_amount<one_larimer){
-
-      //global donation to the contract, split between top oracles across all pairs
-      pairs.modify(*itr, _self, [&]( auto& s ) {
-        s.bounty_awarded = true;
-      });
-
-    }
-
-    update_datapoints(owner, quotes[i].value, itr);
-
   }
 
 }

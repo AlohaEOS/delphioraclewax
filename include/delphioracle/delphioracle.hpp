@@ -518,6 +518,17 @@ private:
 
     return false;
   }
+  
+  // Check if calling account is a registered bp
+  bool check_bp(const name owner) {
+    producers_table ptable("eosio"_n, name("eosio").value);
+    auto p_idx = ptable.get_index<"prototalvote"_n>();
+    auto prod = ptable.find(owner.value);
+    if (prod != ptable.end() && prod->is_active == 1) {
+      return true;
+    }
+    return false;
+  }
 
   checksum256 get_multiparty_hash(const name owner, const std::string reveal){
 
